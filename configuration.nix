@@ -34,19 +34,8 @@
   };
 
   # bootloader
-  boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
-    };
-    grub = {
-      enable = true;
-      efiSupport = true;
-      #efiInstallAsRemovable = true; # in case canTouchEfiVariables doesn't work for your system
-      device = "nodev";
-      useOSProber = true;
-    };
-  };
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   # docker
   virtualisation.docker.enable = true;
@@ -72,11 +61,10 @@
       in {
         enable = true;
 
-        enabledExtensions = with spicePkgs.extensions; [
-          adblock
-          hidePodcasts
-          shuffle # shuffle+ (special characters are sanitized out of extension names)
-        ];
+        enabledExtensions = with spicePkgs.extensions;
+          [
+            shuffle # shuffle+ (special characters are sanitized out of extension names)
+          ];
         enabledCustomApps = with spicePkgs.apps; [ newReleases ncsVisualizer ];
         enabledSnippets = with spicePkgs.snippets; [ rotatingCoverart pointer ];
 
