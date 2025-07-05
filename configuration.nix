@@ -28,7 +28,7 @@
     users.lucas = import ./home.nix;
     sharedModules = [{
       stylix.autoEnable = true;
-      stylix.targets.rofi.enable = false;
+      stylix.targets.rofi.enable = true;
       stylix.targets.vscode.enable = false;
     }];
   };
@@ -56,20 +56,20 @@
       gamescopeSession.enable = true;
     };
     gamemode = { enable = true; };
-    spicetify =
-      let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
-      in {
-        enable = true;
+    # spicetify =
+    #   let spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+    #   in {
+    #     enable = true;
 
-        enabledExtensions = with spicePkgs.extensions;
-          [
-            shuffle # shuffle+ (special characters are sanitized out of extension names)
-          ];
-        enabledCustomApps = with spicePkgs.apps; [ newReleases ncsVisualizer ];
-        enabledSnippets = with spicePkgs.snippets; [ rotatingCoverart pointer ];
+    #     enabledExtensions = with spicePkgs.extensions;
+    #       [
+    #         shuffle # shuffle+ (special characters are sanitized out of extension names)
+    #       ];
+    #     enabledCustomApps = with spicePkgs.apps; [ newReleases ncsVisualizer ];
+    #     enabledSnippets = with spicePkgs.snippets; [ rotatingCoverart pointer ];
 
-        theme = spicePkgs.themes.hazy;
-      };
+    #     # theme = spicePkgs.themes.hazy;
+    #   };
   };
 
   # networking 

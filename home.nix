@@ -1,6 +1,10 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, lib, ... }:
 
-{
+let
+  findFFProfile = ''
+    ls "$HOME/.mozilla/firefox" | grep '\.default-release$' | head -n1
+  '';
+in {
   programs = {
     home-manager = { enable = true; };
     nushell = {
@@ -54,6 +58,10 @@
     rofi = { enable = true; };
     direnv = { enable = true; };
     lazydocker = { enable = true; };
+    firefox = {
+      enable = true;
+
+    };
   };
 
   wayland.windowManager.hyprland = {
@@ -144,15 +152,36 @@
   home.homeDirectory = "/home/lucas";
   home.stateVersion = "25.05";
 
+  home.activation.firefoxBlurCss = lib.mkAfter ''
+        profile=$( ${findFFProfile} )
+        fullpath="$HOME/.mozilla/firefox/$profile/chrome"
+        mkdir -p "$fullpath"
+        cat > "$fullpath/userContent.css" <<'EOF'
+    @-moz-document url-prefix("http://"), url-prefix("https://") {
+      /* make the page background fully transparent */
+      html {
+        background: transparent !important;
+      }
+      /* frosted-glass effect */
+      body {
+        background-color: rgba(255,255,255,0.3) !important;
+        backdrop-filter: blur(15px) !important;
+      }
+    }
+    EOF
+  '';
+
   home.packages = with pkgs; [
+    ffmpeg-full
     discord
+    betterdiscordctl
     google-chrome
-    firefox
     jetbrains.idea-ultimate
     obs-studio
     mprocs # running multiple processes
     termdown # terminal clock
     just # running commands
+    spotify
   ];
 
   nixpkgs.config.allowUnfree = true;
